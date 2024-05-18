@@ -1,0 +1,170 @@
+CREATE DATABASE IF NOT EXISTS hms2;
+USE hms2;
+CREATE TABLE Patients (
+    patient_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    emergency_contact_name VARCHAR(100) NOT NULL,
+    emergency_contact_phone VARCHAR(15) NOT NULL
+);
+CREATE TABLE Departments (
+    department_id INT PRIMARY KEY AUTO_INCREMENT,
+    department_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Doctors (
+    doctor_id INT PRIMARY KEY AUTO_INCREMENT,
+    doctor_name VARCHAR(100) NOT NULL,
+    specialization VARCHAR(100) NOT NULL,
+    department_id INT,
+    years_of_experience INT NOT NULL,
+    qualifications VARCHAR(255) NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+
+CREATE TABLE Nurses (
+    nurse_id INT PRIMARY KEY AUTO_INCREMENT,
+    nurse_name VARCHAR(100) NOT NULL,
+    department_id INT,
+    qualifications VARCHAR(255) NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+CREATE TABLE Admissions (
+    admission_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    admission_date DATE NOT NULL,
+    discharge_date DATE,
+    admitting_doctor_id INT,
+    reason_for_admission VARCHAR(255) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admitting_doctor_id) REFERENCES Doctors(doctor_id)
+);
+CREATE TABLE MedicalRecords (
+    medical_record_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    admission_id INT,
+    medical_history TEXT NOT NULL,
+    allergies VARCHAR(255),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+CREATE TABLE Prescriptions (
+    prescription_id INT PRIMARY KEY AUTO_INCREMENT,
+    doctor_id INT,
+    patient_id INT,
+    admission_id INT,
+    medication_name VARCHAR(255) NOT NULL,
+    dosage VARCHAR(100) NOT NULL,
+    frequency VARCHAR(100) NOT NULL,
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+
+CREATE TABLE Treatments (
+    treatment_id INT PRIMARY KEY AUTO_INCREMENT,
+    doctor_id INT,
+    patient_id INT,
+    admission_id INT,
+    treatment_description TEXT NOT NULL,
+    treatment_date DATE NOT NULL,
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+CREATE TABLE Appointments (
+    appointment_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    doctor_id INT,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    appointment_type VARCHAR(50) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
+);
+CREATE TABLE LabTests (
+    lab_test_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    admission_id INT,
+    test_type VARCHAR(255) NOT NULL,
+    test_date DATE NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+CREATE TABLE ImagingStudies (
+    imaging_study_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    admission_id INT,
+    study_type VARCHAR(255) NOT NULL,
+    study_date DATE NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+CREATE TABLE Staffs (
+    staff_id INT PRIMARY KEY AUTO_INCREMENT,
+    staff_name VARCHAR(255) NOT NULL,
+    department_id INT,
+    job_title VARCHAR(255) NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+CREATE TABLE Inventory (
+    inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+    item_name VARCHAR(255) NOT NULL,
+    item_description TEXT,
+    category VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL
+);
+CREATE TABLE Suppliers (
+    supplier_id INT PRIMARY KEY AUTO_INCREMENT,
+    supplier_name VARCHAR(255) NOT NULL,
+    contact_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    email_address VARCHAR(255) NOT NULL
+);
+CREATE TABLE Purchases (
+    purchase_id INT PRIMARY KEY AUTO_INCREMENT,
+    supplier_id INT,
+    purchase_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id)
+);
+
+CREATE TABLE Bills (
+    bill_id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT,
+    admission_id INT,
+    bill_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    payment_status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id)
+);
+CREATE TABLE Payments (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    bill_id INT,
+    payment_date DATE NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    payment_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (bill_id) REFERENCES Bills(bill_id)
+);
+CREATE TABLE Rooms (
+    room_id INT PRIMARY KEY AUTO_INCREMENT,
+    room_type VARCHAR(50) NOT NULL,
+    department_id INT,
+    location VARCHAR(255),
+    availability_status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+CREATE TABLE RoomAssignments (
+    room_assignment_id INT PRIMARY KEY AUTO_INCREMENT,
+    admission_id INT,
+    room_id INT,
+    assignment_date DATE NOT NULL,
+    FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id),
+    FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
+); 
+
+

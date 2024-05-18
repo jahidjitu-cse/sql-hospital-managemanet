@@ -1,0 +1,171 @@
+erDiagram
+    Doctors {
+        doctor_id INT
+        doctor_name VARCHAR
+        specialization VARCHAR
+        department_id INT
+        years_of_experience INT
+        qualifications VARCHAR
+    }
+    Nurses {
+        nurse_id INT
+        nurse_name VARCHAR
+        department_id INT
+        qualifications VARCHAR
+    }
+    Staffs {
+        staff_id INT
+        staff_name VARCHAR
+        department_id INT
+        job_title VARCHAR
+    }
+    Patients {
+        patient_id INT
+        patient_name VARCHAR
+        date_of_birth DATE
+        address VARCHAR
+        phone_number VARCHAR
+        emergency_contact_name VARCHAR
+        emergency_contact_phone VARCHAR
+    }
+    Departments {
+        department_id INT
+        department_name VARCHAR
+    }
+    Admissions {
+        admission_id INT
+        patient_id INT
+        admission_date DATE
+        discharge_date DATE
+        admitting_doctor_id INT
+        reason_for_admission VARCHAR
+    }
+    MedicalRecords {
+        medical_record_id INT
+        patient_id INT
+        admission_id INT
+        medical_history TEXT
+        allergies VARCHAR
+    }
+    Prescriptions {
+        prescription_id INT
+        doctor_id INT
+        patient_id INT
+        admission_id INT
+        medication_name VARCHAR
+        dosage VARCHAR
+        frequency VARCHAR
+    }
+    Treatments {
+        treatment_id INT
+        doctor_id INT
+        patient_id INT
+        admission_id INT
+        treatment_description TEXT
+        treatment_date DATE
+    }
+    Appointments {
+        appointment_id INT
+        patient_id INT
+        doctor_id INT
+        appointment_date DATE
+        appointment_time TIME
+        appointment_type VARCHAR
+    }
+    LabTests {
+        lab_test_id INT
+        patient_id INT
+        admission_id INT
+        test_type VARCHAR
+        test_date DATE
+    }
+    ImagingStudies {
+        imaging_study_id INT
+        patient_id INT
+        admission_id INT
+        study_type VARCHAR
+        study_date DATE
+    }
+    Inventory {
+        inventory_id INT
+        item_name VARCHAR
+        item_description TEXT
+        category VARCHAR
+        quantity INT
+        unit_price DECIMAL
+    }
+    Suppliers {
+        supplier_id INT
+        supplier_name VARCHAR
+        contact_name VARCHAR
+        phone_number VARCHAR
+        email_address VARCHAR
+    }
+    Purchases {
+        purchase_id INT
+        supplier_id INT
+        purchase_date DATE
+        total_amount DECIMAL
+    }
+    Bills {
+        bill_id INT
+        patient_id INT
+        admission_id INT
+        bill_date DATE
+        total_amount DECIMAL
+        payment_status VARCHAR
+    }
+    Payments {
+        payment_id INT
+        bill_id INT
+        payment_date DATE
+        payment_method VARCHAR
+        payment_amount DECIMAL
+    }
+    Rooms {
+        room_id INT
+        room_type VARCHAR
+        department_id INT
+        location VARCHAR
+        availability_status VARCHAR
+    }
+    RoomAssignments {
+        room_assignment_id INT
+        admission_id INT
+        room_id INT
+        assignment_date DATE
+    }
+
+    Departments ||--o{ Doctors: "department_id"
+    Departments ||--o{ Nurses: "department_id"
+    Departments ||--o{ Staffs: "department_id"
+    Departments ||--o{ Rooms: "department_id"
+   
+
+    Doctors ||--o{ Admissions: "admitting_doctor_id"
+    Doctors ||--o{ Treatments: "doctor_id"
+    Doctors ||--o{ Prescriptions: "doctor_id"
+    Doctors ||--o{ Appointments: "doctor_id"
+
+    Patients ||--o{ MedicalRecords: "patient_id"
+    Patients ||--o{ Prescriptions: "patient_id"
+    Patients ||--o{ Treatments: "patient_id"
+    Patients ||--o{ Appointments: "patient_id"
+    Patients ||--o{ LabTests: "patient_id"
+    Patients ||--o{ ImagingStudies: "patient_id"
+    Patients ||--o{ Admissions: "patient_id"
+    Patients ||--o{ Bills: "patient_id"
+ 
+    Admissions ||--o{ RoomAssignments: "admission_id"
+    Admissions ||--o{ MedicalRecords: "admission_id"
+    Admissions ||--o{ Prescriptions: "admission_id"
+    Admissions ||--o{ Treatments: "admission_id"
+    Admissions ||--o{ LabTests: "admission_id"
+    Admissions ||--o{ ImagingStudies: "admission_id"
+    Admissions ||--o{ Bills: "admission_id"
+
+
+    Suppliers ||--o{ Purchases: "supplier_id"
+    Bills ||--o{ Payments: "bill_id"
+    
+    Rooms ||--o{ RoomAssignments: "room_id"
